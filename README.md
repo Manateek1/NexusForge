@@ -2,6 +2,12 @@
 
 Nexus Forge is a Windows desktop app for chatting with language models that run on your own PC. It is private by design: the app talks only to a local [Ollama](https://ollama.com/) server at `http://127.0.0.1:11434`.
 
+## Privacy and security
+
+- The app makes model requests only to the Ollama server on your own machine; it does not send prompts to a hosted AI provider.
+- Model weights, chat data, installers, `.env` files, and credentials are deliberately excluded from this repository.
+- Keep any future API keys in a local `.env` file. Never commit them to GitHub.
+
 ## What is included
 
 - Electron desktop shell for Windows
