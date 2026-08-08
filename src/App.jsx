@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowUp, Bot, ChevronDown, CirclePlus, Cpu, MessageSquare, RefreshCw, Sparkles, SquarePen } from 'lucide-react';
+import { ArrowUp, Bot, ChevronDown, CirclePlus, Cpu, Download, MessageSquare, RefreshCw, Sparkles, SquarePen } from 'lucide-react';
 
 const starters = [
   { title: 'Explain a concept', prompt: 'Explain how local language models work in clear, beginner-friendly terms.' },
@@ -10,6 +10,8 @@ const starters = [
 const nexusApi = window.nexus ?? {
   models: async () => ({ connected: false, models: [] }),
   chat: async () => { throw new Error('A local model connection is unavailable in this preview.'); },
+  setup: async () => { throw new Error('Automatic setup is available in the Nexus Forge desktop app.'); },
+  onSetupProgress: () => () => {},
 };
 
 function modelLabel(model) {
@@ -23,6 +25,8 @@ export default function App() {
   const [draft, setDraft] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [showModels, setShowModels] = useState(false);
+  const [isSettingUp, setIsSettingUp] = useState(false);
+  const [setupMessage, setSetupMessage] = useState('');
 
   const activeModel = useMemo(
     () => connection.models.find((model) => model.name === selectedModel),
@@ -36,6 +40,21 @@ export default function App() {
   }
 
   useEffect(() => { refreshModels(); }, []);
+  useEffect(() => nexusApi.onSetupProgress(setSetupMessage), []);
+
+  async function setUpDefaultModel() {
+    setIsSettingUp(true);
+    setSetupMessage('Preparing your local workspace...');
+    try {
+      const result = await nexusApi.setup();
+      setConnection(result);
+      setSelectedModel(result.defaultModel || result.models[0]?.name || '');
+    } catch (error) {
+      setSetupMessage(error.message);
+    } finally {
+      setIsSettingUp(false);
+    }
+  }
 
   async function sendMessage(text = draft) {
     const prompt = text.trim();
@@ -74,7 +93,7 @@ export default function App() {
 
         <div className={`conversation-view ${messages.length ? 'has-messages' : ''}`}>
           {messages.length === 0 ? <>
-            <div className="welcome"><div className="welcome-icon"><Bot size={28} /></div><h2>Start a local conversation</h2><p>Choose a model below, then send it something worth thinking about.</p></div>
+            <div className="welcome"><div className="welcome-icon"><Bot size={28} /></div><h2>Start a local conversation</h2><p>{connection.connected && connection.models.length ? 'Choose a model below, then send it something worth thinking about.' : 'Set up Qwen3 once and Nexus Forge handles the rest locally.'}</p>{(!connection.connected || !connection.models.length) && <button className="setup-button" onClick={setUpDefaultModel} disabled={isSettingUp}><Download size={16} />{isSettingUp ? setupMessage || 'Setting up...' : 'Set up Qwen3 14B'}</button>}{setupMessage && <p className="setup-note">{setupMessage}</p>}</div>
             <div className="starter-grid">{starters.map((starter) => <button key={starter.title} onClick={() => sendMessage(starter.prompt)}><CirclePlus size={17} /><span><strong>{starter.title}</strong><small>{starter.prompt}</small></span></button>)}</div>
           </> : <div className="messages">{messages.map((message, index) => <article key={index} className={`message ${message.role} ${message.isNotice ? 'notice' : ''}`}><div className="message-avatar">{message.role === 'user' ? 'DN' : <Bot size={16} />}</div><div className="message-content">{message.content}</div></article>)}{isSending && <article className="message assistant"><div className="message-avatar"><Bot size={16} /></div><div className="typing"><i /><i /><i /></div></article>}</div>}
         </div>

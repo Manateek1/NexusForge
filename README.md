@@ -15,13 +15,17 @@ Nexus Forge is a Windows desktop app for chatting with language models that run 
 - Local Ollama model discovery and chat requests
 - Windows NSIS installer build target (`.exe`)
 
-## First local model
+## One-click first model
 
-1. Install Ollama for Windows from [ollama.com](https://ollama.com/).
-2. In PowerShell, run `ollama run llama3.2` (or another model you want to try).
-3. Start Nexus Forge and click the refresh button. The model will appear in the model selector.
+On first launch, select **Set up Qwen3 14B**. Nexus Forge will:
 
-The RTX 5070 and 64 GB of system memory are a strong starting point. Begin with a 7B–8B model for responsiveness; model size and quantization determine how much can stay in GPU memory.
+1. Install the official Ollama Windows package through WinGet when it is not already present.
+2. Start Ollama locally at `127.0.0.1:11434`.
+3. Download Qwen3 14B (about 9.3 GB) and select it for the conversation.
+
+If WinGet is not available, the app opens the official Ollama download page and asks you to return after installation. The model is never uploaded or bundled into this repository or installer.
+
+The RTX 5070 and 64 GB of system memory are a strong starting point. Qwen3 14B is the default for general chat; add `qwen2.5-coder:14b` later when you are ready for a dedicated code model.
 
 ## Development
 
