@@ -1,0 +1,42 @@
+{
+  "name": "nexus-forge",
+  "version": "0.1.0",
+  "description": "A private desktop workspace for local language models.",
+  "main": "electron/main.cjs",
+  "author": "Dillon Nagar",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on tcp:127.0.0.1:5173 && electron .\"",
+    "build": "vite build",
+    "dist": "npm run build && electron-builder --win nsis --publish never"
+  },
+  "build": {
+    "appId": "com.dillonnagar.nexusforge",
+    "productName": "Nexus Forge",
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "concurrently": "latest",
+    "electron": "latest",
+    "electron-builder": "latest",
+    "vite": "latest",
+    "wait-on": "latest"
+  }
+}
