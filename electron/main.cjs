@@ -5,7 +5,10 @@ const path = require('path');
 
 const OLLAMA_URL = 'http://127.0.0.1:11434';
 const DEFAULT_MODEL = 'qwen3:14b';
+const APP_ICON = path.join(__dirname, '..', 'build', 'icon.ico');
 let mainWindow;
+
+if (process.platform === 'win32') app.setAppUserModelId('com.dillonnagar.nexusforge');
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -14,6 +17,7 @@ function createWindow() {
     minWidth: 980,
     minHeight: 680,
     backgroundColor: '#101116',
+    icon: APP_ICON,
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#101116', symbolColor: '#e9e9ee', height: 38 },
     webPreferences: {

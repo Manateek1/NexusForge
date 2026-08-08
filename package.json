@@ -1,6 +1,6 @@
 {
   "name": "nexus-forge",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A private desktop workspace for local language models.",
   "main": "electron/main.cjs",
   "author": "Dillon Nagar",
@@ -13,13 +13,16 @@
   "build": {
     "appId": "com.dillonnagar.nexusforge",
     "productName": "Nexus Forge",
+    "icon": "build/icon.ico",
     "files": [
       "dist/**/*",
       "electron/**/*",
+      "build/icon.ico",
       "package.json"
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.ico"
     },
     "nsis": {
       "oneClick": false,
