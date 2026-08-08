@@ -1,6 +1,6 @@
 {
   "name": "nexus-forge",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A private desktop workspace for local language models.",
   "main": "electron/main.cjs",
   "author": "Dillon Nagar",

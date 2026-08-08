@@ -31,9 +31,9 @@ function createWindow() {
   else mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
 }
 
-async function withTimeout(url, options = {}) {
+async function withTimeout(url, options = {}, timeoutMs = 4500) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 4500);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await fetch(url, { ...options, signal: controller.signal });
   } finally {
@@ -142,7 +142,7 @@ ipcMain.handle('ollama:chat', async (_event, { model, messages }) => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ model, messages, stream: false }),
-  });
+  }, 10 * 60 * 1000);
   if (!response.ok) throw new Error(`Ollama returned ${response.status}`);
   const data = await response.json();
   return data.message;
